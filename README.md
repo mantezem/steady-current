@@ -43,6 +43,27 @@ The schema includes:
 - `resources`
 - `document_chunks`
 
+## Reset Progress
+
+Learner progress is stored in PostgreSQL in `user_preferences`, `user_mastery`, and
+`question_attempts` for the active `APP_USER_ID` (defaults to `default-user`).
+
+To reset only that learner's progress and keep the seeded topics/resources/chunks:
+
+```bash
+docker compose exec postgres psql -U steady -d steady_current -c "DELETE FROM question_attempts WHERE user_id = 'default-user'; DELETE FROM user_mastery WHERE user_id = 'default-user'; DELETE FROM user_preferences WHERE user_id = 'default-user';"
+```
+
+If you changed `APP_USER_ID` in `.env`, replace `default-user` with that value.
+
+To wipe everything in Postgres, including seeded content and embeddings, and rebuild
+from scratch:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
 ## Architecture
 
 The app is a modulith:
