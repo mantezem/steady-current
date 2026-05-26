@@ -9,6 +9,11 @@ resources:
     service: Architecture Center
     source_type: architecture_reference
 
+  - url: https://cloud.google.com/bigquery/docs/introduction
+    title: BigQuery Introduction
+    service: BigQuery
+    source_type: official_docs
+
   - url: https://cloud.google.com/bigquery/docs/partitioned-tables
     title: Introduction to Partitioned Tables
     service: BigQuery
@@ -34,9 +39,89 @@ resources:
     service: BigQuery
     source_type: official_docs
 
+  - url: https://cloud.google.com/bigquery/docs/external-tables
+    title: External Tables in BigQuery
+    service: BigQuery
+    source_type: official_docs
+
+  - url: https://cloud.google.com/bigquery/docs/editions-intro
+    title: BigQuery Editions Introduction
+    service: BigQuery
+    source_type: official_docs
+
+  - url: https://cloud.google.com/bigquery/docs/column-level-security-intro
+    title: Column-Level Security Introduction
+    service: BigQuery
+    source_type: official_docs
+
+  - url: https://cloud.google.com/bigquery/docs/vector-search-intro
+    title: Vector Search Introduction
+    service: BigQuery
+    source_type: official_docs
+
+  - url: https://cloud.google.com/bi-engine/docs/introduction
+    title: BI Engine Introduction
+    service: BI Engine
+    source_type: official_docs
+
+  - url: https://cloud.google.com/bigtable/docs/overview
+    title: Bigtable Overview
+    service: Bigtable
+    source_type: official_docs
+
   - url: https://cloud.google.com/bigtable/docs/schema-design
     title: Bigtable Schema Design
     service: Bigtable
+    source_type: official_docs
+
+  - url: https://cloud.google.com/sql/docs/mysql/introduction
+    title: Cloud SQL Introduction
+    service: Cloud SQL
+    source_type: official_docs
+
+  - url: https://cloud.google.com/spanner/docs/overview
+    title: Spanner Overview
+    service: Spanner
+    source_type: official_docs
+
+  - url: https://cloud.google.com/alloydb/docs/overview
+    title: AlloyDB Overview
+    service: AlloyDB
+    source_type: official_docs
+
+  - url: https://cloud.google.com/storage/docs/introduction
+    title: Cloud Storage Introduction
+    service: Cloud Storage
+    source_type: official_docs
+
+  - url: https://cloud.google.com/storage/docs/lifecycle
+    title: Object Lifecycle Management
+    service: Cloud Storage
+    source_type: official_docs
+
+  - url: https://cloud.google.com/storage/docs/using-bucket-lock
+    title: Retention Policies and Bucket Lock
+    service: Cloud Storage
+    source_type: official_docs
+
+  - url: https://cloud.google.com/biglake/docs/introduction
+    title: BigLake Introduction
+    service: BigLake
+    source_type: official_docs
+
+  - url: https://cloud.google.com/bigquery/docs/iceberg-tables
+    title: Apache Iceberg Tables in BigQuery
+    service: BigQuery
+    source_type: official_docs
+
+  - url: https://cloud.google.com/dataplex/docs/overview
+    title: Dataplex Overview
+    service: Dataplex
+    source_type: official_docs
+
+  - url: https://cloud.google.com/dataflow/docs/overview
+    title: Dataflow Overview
+    service: Dataflow
     source_type: official_docs
 
   - url: https://cloud.google.com/dataflow/docs/concepts/streaming-pipelines
@@ -49,14 +134,34 @@ resources:
     service: Dataflow
     source_type: official_docs
 
-  - url: https://cloud.google.com/dataflow/docs/guides/troubleshoot-batch-stragglers
-    title: Troubleshoot Batch Stragglers
+  - url: https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates
+    title: Flex Templates
     service: Dataflow
     source_type: official_docs
 
-  - url: https://cloud.google.com/pubsub/docs/overview
-    title: Pub/Sub Overview
-    service: Pub/Sub
+  - url: https://beam.apache.org/documentation/programming-guide/
+    title: Apache Beam Programming Guide
+    service: Apache Beam
+    source_type: official_docs
+
+  - url: https://beam.apache.org/documentation/programming-guide/#windowing
+    title: Apache Beam Windowing
+    service: Apache Beam
+    source_type: official_docs
+
+  - url: https://beam.apache.org/documentation/programming-guide/#watermarks-and-late-data
+    title: Watermarks and Late Data
+    service: Apache Beam
+    source_type: official_docs
+
+  - url: https://beam.apache.org/documentation/programming-guide/#triggers
+    title: Apache Beam Triggers
+    service: Apache Beam
+    source_type: official_docs
+
+  - url: https://beam.apache.org/documentation/programming-guide/#state-and-timers
+    title: Apache Beam State and Timers
+    service: Apache Beam
     source_type: official_docs
 
   - url: https://cloud.google.com/dataproc/docs/concepts/overview
@@ -67,6 +172,61 @@ resources:
   - url: https://cloud.google.com/dataproc-serverless/docs/overview
     title: Dataproc Serverless Overview
     service: Dataproc
+    source_type: official_docs
+
+  - url: https://spark.apache.org/docs/latest/tuning.html
+    title: Spark Tuning Guide
+    service: Apache Spark
+    source_type: official_docs
+
+  - url: https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings
+    title: Generate Text Embeddings
+    service: Vertex AI
+    source_type: official_docs
+
+  - url: https://cloud.google.com/pubsub/docs/overview
+    title: Pub/Sub Overview
+    service: Pub/Sub
+    source_type: official_docs
+
+  - url: https://cloud.google.com/pubsub/docs/subscription-overview
+    title: Pub/Sub Subscription Overview
+    service: Pub/Sub
+    source_type: official_docs
+
+  - url: https://cloud.google.com/managed-service-for-apache-kafka/docs/overview
+    title: Managed Service for Apache Kafka Overview
+    service: Kafka
+    source_type: official_docs
+
+  - url: https://cloud.google.com/datastream/docs/overview
+    title: Datastream Overview
+    service: Datastream
+    source_type: official_docs
+
+  - url: https://cloud.google.com/architecture/cdc-data-pipelines
+    title: Change Data Capture Patterns
+    service: CDC
+    source_type: architecture_reference
+
+  - url: https://cloud.google.com/bigquery-transfer/docs/introduction
+    title: BigQuery Data Transfer Service Introduction
+    service: BigQuery DTS
+    source_type: official_docs
+
+  - url: https://cloud.google.com/storage-transfer/docs/overview
+    title: Storage Transfer Service Overview
+    service: Storage Transfer Service
+    source_type: official_docs
+
+  - url: https://cloud.google.com/database-migration/docs/overview
+    title: Database Migration Service Overview
+    service: Database Migration Service
+    source_type: official_docs
+
+  - url: https://cloud.google.com/data-fusion/docs/concepts/overview
+    title: Cloud Data Fusion Overview
+    service: Cloud Data Fusion
     source_type: official_docs
 
   - url: https://cloud.google.com/composer/docs/composer-3/composer-overview
@@ -89,6 +249,16 @@ resources:
     service: Cloud Build
     source_type: official_docs
 
+  - url: https://cloud.google.com/dataform/docs/overview
+    title: Dataform Overview
+    service: Dataform
+    source_type: official_docs
+
+  - url: https://cloud.google.com/dataform/docs/assertions
+    title: Dataform Assertions and Testing
+    service: Dataform
+    source_type: official_docs
+
   - url: https://cloud.google.com/iam/docs/overview
     title: IAM Overview
     service: IAM
@@ -104,23 +274,33 @@ resources:
     service: KMS
     source_type: official_docs
 
-  - url: https://cloud.google.com/kms/docs/ekm
-    title: Cloud External Key Manager
-    service: EKM
-    source_type: official_docs
-
   - url: https://cloud.google.com/logging/docs/audit
     title: Cloud Audit Logs
     service: Audit Logs
     source_type: official_docs
 
-  - url: https://cloud.google.com/dataplex/docs/overview
-    title: Dataplex Overview
+  - url: https://cloud.google.com/vpc-service-controls/docs/overview
+    title: VPC Service Controls Overview
+    service: VPC Service Controls
+    source_type: official_docs
+
+  - url: https://cloud.google.com/analytics-hub/docs/introduction
+    title: Analytics Hub Introduction
+    service: Analytics Hub
+    source_type: official_docs
+
+  - url: https://cloud.google.com/dataplex/docs/data-quality-overview
+    title: Dataplex Data Quality Overview
     service: Dataplex
     source_type: official_docs
 
   - url: https://cloud.google.com/looker/docs/looker-core-overview
     title: Looker Overview
+    service: Looker
+    source_type: official_docs
+
+  - url: https://cloud.google.com/looker/docs/lookml-terms-and-concepts
+    title: LookML Terms and Concepts
     service: Looker
     source_type: official_docs
 
@@ -139,17 +319,62 @@ resources:
     service: BigQuery ML
     source_type: official_docs
 
+  - url: https://cloud.google.com/bigquery-ml/docs/evaluate-overview
+    title: BigQuery ML Model Evaluation
+    service: BigQuery ML
+    source_type: official_docs
+
+  - url: https://cloud.google.com/architecture/gen-ai-rag-vertex-ai-vector-search
+    title: RAG with Vertex AI Vector Search
+    service: Vertex AI
+    source_type: architecture_reference
+
   - url: https://cloud.google.com/monitoring/docs
     title: Cloud Monitoring Documentation
     service: Monitoring
     source_type: official_docs
 
-  - url: https://cloud.google.com/storage/docs/lifecycle
-    title: Object Lifecycle Management
-    service: Cloud Storage
+  - url: https://cloud.google.com/dataflow/docs/guides/troubleshoot-batch-stragglers
+    title: Troubleshoot Batch Stragglers
+    service: Dataflow
     source_type: official_docs
 
-  - url: https://cloud.google.com/storage/docs/using-bucket-lock
-    title: Retention Policies and Bucket Lock
-    service: Cloud Storage
+  - url: https://cloud.google.com/dataflow/docs/guides/troubleshoot-slow-streaming-jobs
+    title: Troubleshoot Slow Streaming Jobs
+    service: Dataflow
     source_type: official_docs
+
+  - url: https://cloud.google.com/architecture/dr-scenarios-for-data-applications
+    title: Disaster Recovery for Data Applications
+    service: Architecture Center
+    source_type: architecture_reference
+
+  - url: https://cloud.google.com/blog/products/data-analytics/cost-optimization-best-practices-for-bigquery
+    title: BigQuery Cost Optimization Best Practices
+    service: BigQuery
+    source_type: official_docs
+
+  - url: https://cloud.google.com/stackdriver/docs/solutions/slo-monitoring
+    title: SLI/SLO Monitoring
+    service: Cloud Monitoring
+    source_type: official_docs
+
+  - url: https://cloud.google.com/architecture/streaming-analytics-architecture
+    title: Streaming Analytics Architecture
+    service: Architecture Center
+    source_type: architecture_reference
+
+  - url: https://cloud.google.com/blog/products/data-analytics/choosing-between-dataflow-and-dataproc
+    title: Choosing Between Dataflow and Dataproc
+    service: Architecture Center
+    source_type: architecture_reference
+
+  - url: https://cloud.google.com/bigtable/docs/use-cases
+    title: Bigtable Use Cases
+    service: Bigtable
+    source_type: official_docs
+
+  - url: https://cloud.google.com/architecture/lakehouse-modern-data-architecture
+    title: Lakehouse Architecture on Google Cloud
+    service: Architecture Center
+    source_type: architecture_reference

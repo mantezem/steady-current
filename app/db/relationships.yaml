@@ -20,11 +20,27 @@ relationships:
     relationship_type: parent
 
   - source_topic_id: data_engineering
+    target_topic_id: storage.biglake
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: storage.iceberg
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
     target_topic_id: storage.dataplex
     relationship_type: parent
 
   - source_topic_id: data_engineering
+    target_topic_id: storage.alloydb
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
     target_topic_id: processing.dataflow
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: processing.apache_beam
     relationship_type: parent
 
   - source_topic_id: data_engineering
@@ -36,7 +52,39 @@ relationships:
     relationship_type: parent
 
   - source_topic_id: data_engineering
+    target_topic_id: processing.ai_enrichment
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
     target_topic_id: messaging.pubsub
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: messaging.kafka
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: ingestion.datastream
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: ingestion.cdc_patterns
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: ingestion.transfer_service
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: ingestion.storage_transfer
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: ingestion.database_migration_service
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: ingestion.cloud_data_fusion
     relationship_type: parent
 
   - source_topic_id: data_engineering
@@ -53,6 +101,10 @@ relationships:
 
   - source_topic_id: data_engineering
     target_topic_id: orchestration.cicd
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: analytics.dataform
     relationship_type: parent
 
   - source_topic_id: data_engineering
@@ -76,11 +128,19 @@ relationships:
     relationship_type: parent
 
   - source_topic_id: data_engineering
-    target_topic_id: operations.disaster_recovery
+    target_topic_id: architecture.batch_vs_streaming
     relationship_type: parent
 
   - source_topic_id: data_engineering
-    target_topic_id: operations.cost_optimization
+    target_topic_id: architecture.dataflow_vs_dataproc
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: architecture.bigquery_vs_bigtable
+    relationship_type: parent
+
+  - source_topic_id: data_engineering
+    target_topic_id: architecture.lakehouse
     relationship_type: parent
 
   - source_topic_id: storage.bigquery
@@ -91,16 +151,36 @@ relationships:
     target_topic_id: storage.bigquery.clustering
     relationship_type: parent
 
-  - source_topic_id: storage.bigquery
+  - source_topic_id: analytics.bigquery
     target_topic_id: analytics.bigquery.materialized_views
     relationship_type: parent
 
-  - source_topic_id: storage.bigquery
+  - source_topic_id: analytics.bigquery
     target_topic_id: analytics.bigquery.optimization
     relationship_type: parent
 
-  - source_topic_id: storage.bigquery
+  - source_topic_id: analytics.bigquery
     target_topic_id: analytics.bigquery.nested_repeated
+    relationship_type: parent
+
+  - source_topic_id: analytics.bigquery
+    target_topic_id: analytics.bigquery.external_tables
+    relationship_type: parent
+
+  - source_topic_id: analytics.bigquery
+    target_topic_id: analytics.bigquery.editions
+    relationship_type: parent
+
+  - source_topic_id: analytics.bigquery
+    target_topic_id: analytics.bigquery.security
+    relationship_type: parent
+
+  - source_topic_id: analytics.bigquery
+    target_topic_id: analytics.bigquery.vector_search
+    relationship_type: parent
+
+  - source_topic_id: analytics.bigquery
+    target_topic_id: analytics.bigquery.bi_engine
     relationship_type: parent
 
   - source_topic_id: storage.bigtable
@@ -127,8 +207,24 @@ relationships:
     target_topic_id: processing.dataflow.state_timers
     relationship_type: parent
 
+  - source_topic_id: processing.dataflow
+    target_topic_id: processing.dataflow.templates
+    relationship_type: parent
+
   - source_topic_id: processing.dataproc
     target_topic_id: processing.dataproc.serverless
+    relationship_type: parent
+
+  - source_topic_id: processing.spark_optimization
+    target_topic_id: processing.spark_optimization
+    relationship_type: parent
+
+  - source_topic_id: messaging.pubsub
+    target_topic_id: messaging.pubsub.delivery
+    relationship_type: parent
+
+  - source_topic_id: analytics.dataform
+    target_topic_id: analytics.dataform.testing
     relationship_type: parent
 
   - source_topic_id: governance.security
@@ -147,31 +243,103 @@ relationships:
     target_topic_id: governance.audit
     relationship_type: parent
 
+  - source_topic_id: governance.security
+    target_topic_id: governance.vpc_sc
+    relationship_type: parent
+
+  - source_topic_id: analytics.looker
+    target_topic_id: analytics.looker.lookml
+    relationship_type: parent
+
   - source_topic_id: ml.bigquery_ml
     target_topic_id: ml.feature_engineering
+    relationship_type: parent
+
+  - source_topic_id: ml.feature_engineering
+    target_topic_id: ml.model_evaluation
+    relationship_type: parent
+
+  - source_topic_id: ml.feature_engineering
+    target_topic_id: ml.embeddings_rag
     relationship_type: parent
 
   - source_topic_id: operations.monitoring
     target_topic_id: operations.dataflow.hot_keys
     relationship_type: parent
 
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.streaming_reliability
+    relationship_type: parent
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.disaster_recovery
+    relationship_type: parent
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.cost_optimization
+    relationship_type: parent
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.observability
+    relationship_type: parent
+
   - source_topic_id: storage.bigquery
     target_topic_id: storage.bigquery.partitioning
     relationship_type: prerequisite
 
-  - source_topic_id: storage.bigquery.partitioning
+  - source_topic_id: storage.bigquery
     target_topic_id: storage.bigquery.clustering
     relationship_type: prerequisite
 
-  - source_topic_id: storage.bigquery.partitioning
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.materialized_views
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
     target_topic_id: analytics.bigquery.optimization
     relationship_type: prerequisite
 
-  - source_topic_id: storage.bigquery.clustering
-    target_topic_id: analytics.bigquery.optimization
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.nested_repeated
     relationship_type: prerequisite
 
-  - source_topic_id: messaging.pubsub
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.external_tables
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.editions
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.security
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.vector_search
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.bigquery.bi_engine
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigtable
+    target_topic_id: storage.bigtable.schema_design
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.cloud_storage
+    target_topic_id: storage.cloud_storage.lifecycle
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.biglake
+    target_topic_id: storage.iceberg
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.dataplex
+    target_topic_id: governance.data_quality
+    relationship_type: prerequisite
+
+  - source_topic_id: processing.apache_beam
     target_topic_id: processing.dataflow
     relationship_type: prerequisite
 
@@ -187,46 +355,130 @@ relationships:
     target_topic_id: processing.dataflow.triggers
     relationship_type: prerequisite
 
-  - source_topic_id: processing.dataflow.watermarks
+  - source_topic_id: processing.dataflow
     target_topic_id: processing.dataflow.state_timers
+    relationship_type: prerequisite
+
+  - source_topic_id: processing.dataflow
+    target_topic_id: processing.dataflow.templates
     relationship_type: prerequisite
 
   - source_topic_id: processing.dataproc
     target_topic_id: processing.dataproc.serverless
     relationship_type: prerequisite
 
-  - source_topic_id: storage.bigquery
-    target_topic_id: analytics.bigquery.materialized_views
-    relationship_type: related
-
-  - source_topic_id: analytics.bigquery.nested_repeated
-    target_topic_id: analytics.bigquery.materialized_views
-    relationship_type: related
-
-  - source_topic_id: governance.security
-    target_topic_id: storage.bigquery
-    relationship_type: related
-
-  - source_topic_id: governance.security
-    target_topic_id: storage.cloud_storage
-    relationship_type: related
-
-  - source_topic_id: storage.dataplex
-    target_topic_id: governance.security
-    relationship_type: related
+  - source_topic_id: processing.dataproc
+    target_topic_id: processing.spark_optimization
+    relationship_type: prerequisite
 
   - source_topic_id: messaging.pubsub
-    target_topic_id: processing.dataflow.watermarks
-    relationship_type: related
+    target_topic_id: messaging.pubsub.delivery
+    relationship_type: prerequisite
+
+  - source_topic_id: messaging.pubsub
+    target_topic_id: processing.dataflow
+    relationship_type: prerequisite
+
+  - source_topic_id: messaging.kafka
+    target_topic_id: processing.dataproc
+    relationship_type: prerequisite
+
+  - source_topic_id: ingestion.datastream
+    target_topic_id: ingestion.cdc_patterns
+    relationship_type: prerequisite
+
+  - source_topic_id: ingestion.database_migration_service
+    target_topic_id: ingestion.cdc_patterns
+    relationship_type: prerequisite
+
+  - source_topic_id: ingestion.cloud_data_fusion
+    target_topic_id: processing.batch
+    relationship_type: prerequisite
 
   - source_topic_id: orchestration.composer
-    target_topic_id: orchestration.cicd
-    relationship_type: related
+    target_topic_id: analytics.dataform
+    relationship_type: prerequisite
 
-  - source_topic_id: operations.disaster_recovery
-    target_topic_id: processing.dataflow
-    relationship_type: related
+  - source_topic_id: analytics.dataform
+    target_topic_id: analytics.dataform.testing
+    relationship_type: prerequisite
+
+  - source_topic_id: governance.security
+    target_topic_id: governance.iam
+    relationship_type: prerequisite
+
+  - source_topic_id: governance.security
+    target_topic_id: governance.dlp
+    relationship_type: prerequisite
+
+  - source_topic_id: governance.security
+    target_topic_id: governance.kms
+    relationship_type: prerequisite
+
+  - source_topic_id: governance.security
+    target_topic_id: governance.audit
+    relationship_type: prerequisite
+
+  - source_topic_id: governance.security
+    target_topic_id: governance.vpc_sc
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.looker
+    relationship_type: prerequisite
+
+  - source_topic_id: analytics.looker
+    target_topic_id: analytics.looker.lookml
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: analytics.connected_sheets
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: ml.bigquery_ml
+    relationship_type: prerequisite
+
+  - source_topic_id: ml.bigquery_ml
+    target_topic_id: ml.feature_engineering
+    relationship_type: prerequisite
+
+  - source_topic_id: ml.feature_engineering
+    target_topic_id: ml.model_evaluation
+    relationship_type: prerequisite
+
+  - source_topic_id: ml.feature_engineering
+    target_topic_id: ml.embeddings_rag
+    relationship_type: prerequisite
 
   - source_topic_id: operations.monitoring
-    target_topic_id: processing.dataflow
-    relationship_type: related
+    target_topic_id: operations.dataflow.hot_keys
+    relationship_type: prerequisite
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.streaming_reliability
+    relationship_type: prerequisite
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.disaster_recovery
+    relationship_type: prerequisite
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.cost_optimization
+    relationship_type: prerequisite
+
+  - source_topic_id: operations.monitoring
+    target_topic_id: operations.observability
+    relationship_type: prerequisite
+
+  - source_topic_id: architecture.batch_vs_streaming
+    target_topic_id: architecture.dataflow_vs_dataproc
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.bigquery
+    target_topic_id: architecture.bigquery_vs_bigtable
+    relationship_type: prerequisite
+
+  - source_topic_id: storage.biglake
+    target_topic_id: architecture.lakehouse
+    relationship_type: prerequisite
