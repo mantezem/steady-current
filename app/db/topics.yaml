@@ -39,12 +39,22 @@ topics:
     estimated_hours: 2
     exam_weight: medium
 
+  - id: analytics.bigquery
+    title: Advanced BigQuery Analytics
+    domain: analytics
+    description: Advanced BigQuery analytical patterns, performance tuning, and governance controls.
+    depth: 1
+    sort_order: 13
+    difficulty: intermediate
+    estimated_hours: 6
+    exam_weight: high
+
   - id: analytics.bigquery.materialized_views
     title: BigQuery Materialized Views
     domain: analytics
     description: Precomputed query acceleration for repeated analytical workloads.
     depth: 2
-    sort_order: 13
+    sort_order: 14
     difficulty: intermediate
     estimated_hours: 2
     exam_weight: medium
@@ -54,7 +64,7 @@ topics:
     domain: analytics
     description: Query tuning, slot usage, partition pruning, and cost optimization.
     depth: 2
-    sort_order: 14
+    sort_order: 15
     difficulty: advanced
     estimated_hours: 5
     exam_weight: high
@@ -64,7 +74,7 @@ topics:
     domain: analytics
     description: Denormalized schema design for analytical workloads.
     depth: 2
-    sort_order: 15
+    sort_order: 16
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: high
@@ -74,7 +84,7 @@ topics:
     domain: analytics
     description: Querying external data sources using federated and lakehouse architectures.
     depth: 2
-    sort_order: 16
+    sort_order: 17
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: high
@@ -84,7 +94,7 @@ topics:
     domain: analytics
     description: Capacity planning, slot reservations, and edition selection.
     depth: 2
-    sort_order: 17
+    sort_order: 18
     difficulty: advanced
     estimated_hours: 4
     exam_weight: high
@@ -94,7 +104,7 @@ topics:
     domain: governance
     description: Policy tags, row-level security, column-level security, and authorized views.
     depth: 2
-    sort_order: 18
+    sort_order: 19
     difficulty: advanced
     estimated_hours: 4
     exam_weight: high
@@ -104,7 +114,7 @@ topics:
     domain: analytics
     description: Vector indexes and semantic similarity search in BigQuery.
     depth: 2
-    sort_order: 19
+    sort_order: 20
     difficulty: intermediate
     estimated_hours: 2
     exam_weight: medium
@@ -114,7 +124,7 @@ topics:
     domain: analytics
     description: In-memory analysis service for low-latency BI query acceleration.
     depth: 2
-    sort_order: 20
+    sort_order: 21
     difficulty: intermediate
     estimated_hours: 2
     exam_weight: medium
