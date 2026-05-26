@@ -69,12 +69,52 @@ topics:
     estimated_hours: 3
     exam_weight: high
 
+  - id: analytics.bigquery.external_tables
+    title: BigQuery External Tables
+    domain: analytics
+    description: Querying external data sources using federated and lakehouse architectures.
+    depth: 2
+    sort_order: 16
+    difficulty: intermediate
+    estimated_hours: 3
+    exam_weight: high
+
+  - id: analytics.bigquery.editions
+    title: BigQuery Editions and Reservations
+    domain: analytics
+    description: Capacity planning, slot reservations, and edition selection.
+    depth: 2
+    sort_order: 17
+    difficulty: advanced
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: analytics.bigquery.security
+    title: BigQuery Security Controls
+    domain: governance
+    description: Policy tags, row-level security, column-level security, and authorized views.
+    depth: 2
+    sort_order: 18
+    difficulty: advanced
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: analytics.bigquery.vector_search
+    title: BigQuery Vector Search
+    domain: analytics
+    description: Vector indexes and semantic similarity search in BigQuery.
+    depth: 2
+    sort_order: 19
+    difficulty: intermediate
+    estimated_hours: 2
+    exam_weight: medium
+
   - id: storage.bigtable
     title: Bigtable
     domain: storage
     description: Low-latency wide-column NoSQL database for sparse and time-series workloads.
     depth: 1
-    sort_order: 16
+    sort_order: 20
     difficulty: intermediate
     estimated_hours: 5
     exam_weight: high
@@ -84,7 +124,7 @@ topics:
     domain: storage
     description: Row key design, hotspot avoidance, and time-series optimization.
     depth: 2
-    sort_order: 17
+    sort_order: 21
     difficulty: advanced
     estimated_hours: 4
     exam_weight: high
@@ -94,7 +134,7 @@ topics:
     domain: storage
     description: Managed relational database for transactional workloads.
     depth: 1
-    sort_order: 18
+    sort_order: 22
     difficulty: beginner
     estimated_hours: 3
     exam_weight: medium
@@ -104,7 +144,7 @@ topics:
     domain: storage
     description: Globally distributed relational database with strong consistency.
     depth: 1
-    sort_order: 19
+    sort_order: 23
     difficulty: advanced
     estimated_hours: 5
     exam_weight: medium
@@ -114,7 +154,7 @@ topics:
     domain: storage
     description: Object storage for data lakes, archival, and pipeline staging.
     depth: 1
-    sort_order: 20
+    sort_order: 24
     difficulty: beginner
     estimated_hours: 3
     exam_weight: high
@@ -124,9 +164,29 @@ topics:
     domain: storage
     description: Lifecycle management, retention policies, and archival optimization.
     depth: 2
-    sort_order: 21
+    sort_order: 25
     difficulty: beginner
     estimated_hours: 2
+    exam_weight: medium
+
+  - id: storage.biglake
+    title: BigLake
+    domain: storage
+    description: Unified lakehouse storage governance across open formats and BigQuery.
+    depth: 1
+    sort_order: 26
+    difficulty: intermediate
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: storage.iceberg
+    title: Apache Iceberg
+    domain: storage
+    description: Open table format concepts for lakehouse architectures.
+    depth: 2
+    sort_order: 27
+    difficulty: advanced
+    estimated_hours: 3
     exam_weight: medium
 
   - id: storage.dataplex
@@ -134,7 +194,7 @@ topics:
     domain: governance
     description: Unified data mesh and governance across lakes and warehouses.
     depth: 1
-    sort_order: 22
+    sort_order: 28
     difficulty: intermediate
     estimated_hours: 4
     exam_weight: high
@@ -189,12 +249,32 @@ topics:
     estimated_hours: 5
     exam_weight: medium
 
+  - id: processing.dataflow.templates
+    title: Dataflow Flex Templates
+    domain: processing
+    description: Portable deployment packaging and parameterized pipeline execution.
+    depth: 2
+    sort_order: 35
+    difficulty: intermediate
+    estimated_hours: 3
+    exam_weight: medium
+
+  - id: processing.apache_beam
+    title: Apache Beam Fundamentals
+    domain: processing
+    description: PCollections, transforms, side inputs, and unified batch/stream APIs.
+    depth: 2
+    sort_order: 36
+    difficulty: advanced
+    estimated_hours: 5
+    exam_weight: high
+
   - id: processing.dataproc
     title: Dataproc
     domain: processing
     description: Managed Spark and Hadoop platform for batch processing workloads.
     depth: 1
-    sort_order: 35
+    sort_order: 37
     difficulty: intermediate
     estimated_hours: 5
     exam_weight: high
@@ -204,9 +284,19 @@ topics:
     domain: processing
     description: Serverless Spark execution without cluster management.
     depth: 2
-    sort_order: 36
+    sort_order: 38
     difficulty: intermediate
     estimated_hours: 3
+    exam_weight: medium
+
+  - id: processing.spark_optimization
+    title: Spark Optimization
+    domain: processing
+    description: Spark execution tuning, partitioning, and performance optimization.
+    depth: 2
+    sort_order: 39
+    difficulty: advanced
+    estimated_hours: 4
     exam_weight: medium
 
   - id: processing.batch
@@ -214,7 +304,7 @@ topics:
     domain: processing
     description: Batch workload execution and orchestration on Google Cloud.
     depth: 1
-    sort_order: 37
+    sort_order: 40
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: medium
@@ -224,17 +314,67 @@ topics:
     domain: ingestion
     description: Global messaging for event ingestion and streaming architectures.
     depth: 1
-    sort_order: 40
+    sort_order: 50
     difficulty: intermediate
     estimated_hours: 4
     exam_weight: high
+
+  - id: messaging.pubsub.delivery
+    title: Pub/Sub Delivery Semantics
+    domain: ingestion
+    description: At-least-once delivery, ordering keys, replay, and dead-letter topics.
+    depth: 2
+    sort_order: 51
+    difficulty: advanced
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: ingestion.datastream
+    title: Datastream
+    domain: ingestion
+    description: Change data capture and database replication into Google Cloud.
+    depth: 1
+    sort_order: 52
+    difficulty: intermediate
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: ingestion.cdc_patterns
+    title: CDC Architecture Patterns
+    domain: ingestion
+    description: Change data capture strategies, schema evolution, and operational replication.
+    depth: 2
+    sort_order: 53
+    difficulty: advanced
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: ingestion.transfer_service
+    title: BigQuery Data Transfer Service
+    domain: ingestion
+    description: Managed ingestion from SaaS platforms and Google services.
+    depth: 1
+    sort_order: 54
+    difficulty: beginner
+    estimated_hours: 2
+    exam_weight: medium
+
+  - id: ingestion.storage_transfer
+    title: Storage Transfer Service
+    domain: ingestion
+    description: Bulk and scheduled transfer of data into Cloud Storage.
+    depth: 1
+    sort_order: 55
+    difficulty: beginner
+    estimated_hours: 2
+    exam_weight: low
 
   - id: orchestration.composer
     title: Cloud Composer
     domain: orchestration
     description: Managed Airflow for workflow orchestration.
     depth: 1
-    sort_order: 50
+    sort_order: 60
     difficulty: intermediate
     estimated_hours: 4
     exam_weight: high
@@ -244,7 +384,7 @@ topics:
     domain: orchestration
     description: Serverless orchestration for APIs and long-running workflows.
     depth: 1
-    sort_order: 51
+    sort_order: 61
     difficulty: beginner
     estimated_hours: 2
     exam_weight: low
@@ -254,7 +394,7 @@ topics:
     domain: orchestration
     description: Cron-based job scheduling for cloud workloads.
     depth: 1
-    sort_order: 52
+    sort_order: 62
     difficulty: beginner
     estimated_hours: 1
     exam_weight: low
@@ -264,7 +404,27 @@ topics:
     domain: orchestration
     description: Continuous integration and deployment for data workloads.
     depth: 1
-    sort_order: 53
+    sort_order: 63
+    difficulty: intermediate
+    estimated_hours: 3
+    exam_weight: medium
+
+  - id: analytics.dataform
+    title: Dataform
+    domain: analytics
+    description: SQL-based transformation workflows and analytics engineering.
+    depth: 1
+    sort_order: 64
+    difficulty: intermediate
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: analytics.dataform.testing
+    title: Dataform Testing and Assertions
+    domain: analytics
+    description: Data quality assertions and transformation validation workflows.
+    depth: 2
+    sort_order: 65
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: medium
@@ -274,7 +434,7 @@ topics:
     domain: governance
     description: IAM, encryption, lineage, auditing, and compliance.
     depth: 1
-    sort_order: 60
+    sort_order: 70
     difficulty: intermediate
     estimated_hours: 6
     exam_weight: high
@@ -284,7 +444,7 @@ topics:
     domain: governance
     description: Identity and access management for Google Cloud resources.
     depth: 2
-    sort_order: 61
+    sort_order: 71
     difficulty: intermediate
     estimated_hours: 4
     exam_weight: high
@@ -294,7 +454,7 @@ topics:
     domain: governance
     description: Detection and redaction of sensitive data using DLP.
     depth: 2
-    sort_order: 62
+    sort_order: 72
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: medium
@@ -304,7 +464,7 @@ topics:
     domain: governance
     description: Encryption key management and external key management.
     depth: 2
-    sort_order: 63
+    sort_order: 73
     difficulty: advanced
     estimated_hours: 3
     exam_weight: medium
@@ -314,17 +474,57 @@ topics:
     domain: governance
     description: Monitoring and auditing data access and operations.
     depth: 2
-    sort_order: 64
+    sort_order: 74
     difficulty: beginner
     estimated_hours: 2
     exam_weight: medium
+
+  - id: governance.vpc_sc
+    title: VPC Service Controls
+    domain: governance
+    description: Perimeter-based controls for protecting managed cloud services.
+    depth: 2
+    sort_order: 75
+    difficulty: advanced
+    estimated_hours: 3
+    exam_weight: medium
+
+  - id: governance.analytics_hub
+    title: Analytics Hub
+    domain: governance
+    description: Governed data sharing and analytics exchange patterns.
+    depth: 1
+    sort_order: 76
+    difficulty: intermediate
+    estimated_hours: 3
+    exam_weight: medium
+
+  - id: governance.data_quality
+    title: Data Quality Management
+    domain: governance
+    description: Validation, contracts, observability, and governance of data quality.
+    depth: 1
+    sort_order: 77
+    difficulty: intermediate
+    estimated_hours: 4
+    exam_weight: high
 
   - id: analytics.looker
     title: Looker
     domain: analytics
     description: Semantic modeling and BI platform for multi-source analytics.
     depth: 1
-    sort_order: 70
+    sort_order: 80
+    difficulty: intermediate
+    estimated_hours: 3
+    exam_weight: medium
+
+  - id: analytics.looker.lookml
+    title: LookML
+    domain: analytics
+    description: Semantic modeling and governed metrics definition in Looker.
+    depth: 2
+    sort_order: 81
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: medium
@@ -334,7 +534,7 @@ topics:
     domain: analytics
     description: Spreadsheet-based analytics directly on BigQuery.
     depth: 1
-    sort_order: 71
+    sort_order: 82
     difficulty: beginner
     estimated_hours: 1
     exam_weight: low
@@ -344,7 +544,7 @@ topics:
     domain: ml
     description: Machine learning directly in BigQuery using SQL interfaces.
     depth: 1
-    sort_order: 80
+    sort_order: 90
     difficulty: intermediate
     estimated_hours: 4
     exam_weight: medium
@@ -354,7 +554,17 @@ topics:
     domain: ml
     description: Feature preparation and transformation for ML workloads.
     depth: 2
-    sort_order: 81
+    sort_order: 91
+    difficulty: intermediate
+    estimated_hours: 3
+    exam_weight: medium
+
+  - id: ml.model_evaluation
+    title: BigQuery ML Model Evaluation
+    domain: ml
+    description: Evaluating ML model quality, bias, and operational metrics.
+    depth: 2
+    sort_order: 92
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: medium
@@ -364,7 +574,7 @@ topics:
     domain: operations
     description: Monitoring pipelines, identifying lag, failures, and bottlenecks.
     depth: 1
-    sort_order: 90
+    sort_order: 100
     difficulty: intermediate
     estimated_hours: 4
     exam_weight: high
@@ -374,17 +584,27 @@ topics:
     domain: operations
     description: Detection and mitigation of skew and hotspotting.
     depth: 2
-    sort_order: 91
+    sort_order: 101
     difficulty: advanced
     estimated_hours: 2
     exam_weight: medium
+
+  - id: operations.streaming_reliability
+    title: Streaming Reliability Patterns
+    domain: operations
+    description: Exactly-once processing, deduplication, idempotency, and late data handling.
+    depth: 2
+    sort_order: 102
+    difficulty: advanced
+    estimated_hours: 5
+    exam_weight: high
 
   - id: operations.disaster_recovery
     title: Disaster Recovery
     domain: operations
     description: Snapshots, HA, backups, and failure mitigation strategies.
     depth: 1
-    sort_order: 92
+    sort_order: 103
     difficulty: intermediate
     estimated_hours: 3
     exam_weight: medium
@@ -394,7 +614,57 @@ topics:
     domain: operations
     description: Reservations, autoscaling, editions, and workload optimization.
     depth: 1
-    sort_order: 93
+    sort_order: 104
     difficulty: intermediate
     estimated_hours: 3
+    exam_weight: high
+
+  - id: operations.observability
+    title: Pipeline Observability
+    domain: operations
+    description: Logging, metrics, backlog monitoring, alerting, and SLO/SLA management.
+    depth: 2
+    sort_order: 105
+    difficulty: advanced
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: architecture.batch_vs_streaming
+    title: Batch vs Streaming Architectures
+    domain: architecture
+    description: Tradeoffs between batch and streaming systems for latency, cost, and complexity.
+    depth: 1
+    sort_order: 110
+    difficulty: advanced
+    estimated_hours: 4
+    exam_weight: high
+
+  - id: architecture.dataflow_vs_dataproc
+    title: Dataflow vs Dataproc
+    domain: architecture
+    description: Service selection tradeoffs for distributed processing workloads.
+    depth: 2
+    sort_order: 111
+    difficulty: advanced
+    estimated_hours: 3
+    exam_weight: high
+
+  - id: architecture.bigquery_vs_bigtable
+    title: BigQuery vs Bigtable
+    domain: architecture
+    description: Analytical versus low-latency operational workload decision frameworks.
+    depth: 2
+    sort_order: 112
+    difficulty: advanced
+    estimated_hours: 3
+    exam_weight: high
+
+  - id: architecture.lakehouse
+    title: Lakehouse Architecture Patterns
+    domain: architecture
+    description: Unified analytics architectures combining open storage and warehouses.
+    depth: 1
+    sort_order: 113
+    difficulty: advanced
+    estimated_hours: 4
     exam_weight: high
