@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 
 from app.db.connection import close_pool, get_pool
 from app.db.migrate import migrate
@@ -17,6 +18,7 @@ async def bootstrap() -> None:
 
 
 def main() -> None:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     settings = get_settings()
     asyncio.run(bootstrap())
     ui = build_ui()

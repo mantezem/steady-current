@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 from pathlib import Path
 from typing import Any
@@ -12,9 +13,11 @@ from app.db.repositories import LearningRepository
 from app.models.schemas import QuizQuestion
 from app.utils.config import get_settings
 
+logger = logging.getLogger(__name__)
+
 
 def _normalize_quiz_payload(data: dict[str, Any], topic_id: str) -> dict[str, Any]:
-    data.setdefault("topic_id", topic_id)
+    data["topic_id"] = topic_id
 
     choices = data.get("choices")
     if isinstance(choices, dict):
@@ -67,8 +70,9 @@ class QuizAgent:
 
     async def generate(self, topic_id: str) -> QuizQuestion:
         if not self.settings.openai_api_key:
+            logger.info("OpenAI API key not found; providing default quiz question for topic_id=%s", topic_id)
             return QuizQuestion(
-                topic_id="processing.dataflow.windowing",
+                topic_id=topic_id,
                 question=(
                     "A streaming pipeline receives out-of-order events and must report hourly "
                     "aggregates with corrections for late data. Which design choice is most important?"
@@ -86,6 +90,7 @@ class QuizAgent:
                     "balance early output with late corrections."
                 ),
             )
+        logger.info("OpenAI API key found; generating quiz question for topic_id=%s", topic_id)
         prompt = (
             "Generate one multiple-choice question as JSON with keys: topic_id, question, "
             "choices, correct_answer, explanation. choices must be a JSON array of strings. "

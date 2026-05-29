@@ -77,6 +77,23 @@ class StudyPlanItem(BaseModel):
     mastery: float
 
 
+class TopicRecommendation(BaseModel):
+    topic_id: str
+    title: str
+    reason: str
+    estimated_minutes: int
+    mastery: float
+    confidence: float
+
+
+class InstructorSessionState(BaseModel):
+    available_minutes: int | None = None
+    selected_topic_id: str | None = None
+    selected_topic_title: str | None = None
+    selection_reason: str | None = None
+    ready_for_quiz: bool = False
+
+
 class QuizQuestion(BaseModel):
     topic_id: str
     question: str
