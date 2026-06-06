@@ -17,15 +17,6 @@ CREATE TABLE IF NOT EXISTS topic_relationships (
     UNIQUE (source_topic_id, target_topic_id, relationship_type)
 );
 
-CREATE TABLE IF NOT EXISTS user_preferences (
-    user_id TEXT PRIMARY KEY,
-    study_timeline TEXT NOT NULL DEFAULT '',
-    preferences TEXT NOT NULL DEFAULT '',
-    strengths TEXT NOT NULL DEFAULT '',
-    weaknesses TEXT NOT NULL DEFAULT '',
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
 CREATE TABLE IF NOT EXISTS user_mastery (
     user_id TEXT NOT NULL,
     topic_id TEXT NOT NULL REFERENCES topics(id) ON DELETE CASCADE,

@@ -10,7 +10,7 @@
 - Adaptive planner that balances weak-topic reinforcement with prerequisite-aware progression.
 - Instructor and quiz agents built with the OpenAI Agents SDK.
 - Evaluation flow that stores quiz attempts and updates mastery percentages.
-- Gradio UI for setup, dashboard, instructor chat, quiz, and topic tree browsing.
+- Gradio UI for dashboard, instructor chat, quiz, and topic tree browsing.
 
 ## Run With Docker
 
@@ -37,7 +37,6 @@ The schema includes:
 
 - `topics`
 - `topic_relationships`
-- `user_preferences`
 - `user_mastery`
 - `question_attempts`
 - `resources`
@@ -45,13 +44,13 @@ The schema includes:
 
 ## Reset Progress
 
-Learner progress is stored in PostgreSQL in `user_preferences`, `user_mastery`, and
+Learner progress is stored in PostgreSQL in `user_mastery` and
 `question_attempts` for the active `APP_USER_ID` (defaults to `default-user`).
 
 To reset only that learner's progress and keep the seeded topics/resources/chunks:
 
 ```bash
-docker compose exec postgres psql -U steady -d steady_current -c "DELETE FROM question_attempts WHERE user_id = 'default-user'; DELETE FROM user_mastery WHERE user_id = 'default-user'; DELETE FROM user_preferences WHERE user_id = 'default-user';"
+docker compose exec postgres psql -U steady -d steady_current -c "DELETE FROM question_attempts WHERE user_id = 'default-user'; DELETE FROM user_mastery WHERE user_id = 'default-user';"
 ```
 
 If you changed `APP_USER_ID` in `.env`, replace `default-user` with that value.

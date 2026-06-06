@@ -10,34 +10,13 @@ from app.agents.quiz import QuizAgent
 from app.agents.instructor import InstructorAgent
 from app.db.connection import get_pool
 from app.db.repositories import LearningRepository
-from app.models.schemas import InstructorSessionState, QuizQuestion, StudySetup
+from app.models.schemas import InstructorSessionState, QuizQuestion
 from app.planner.service import StudyPlanner
 from app.utils.config import get_settings
 
 
 async def repo() -> LearningRepository:
     return LearningRepository(await get_pool())
-
-
-async def save_setup(timeline: str, preferences: str, strengths: str, weaknesses: str) -> str:
-    settings = get_settings()
-    learning_repo = await repo()
-    await learning_repo.save_preferences(
-        settings.app_user_id,
-        StudySetup(
-            study_timeline=timeline,
-            preferences=preferences,
-            strengths=strengths,
-            weaknesses=weaknesses,
-        ),
-    )
-    planner = StudyPlanner(learning_repo)
-    plan = await planner.plan(settings.app_user_id, 60)
-    if not plan:
-        return "Setup saved. No unlocked weak topics found yet."
-    return "Setup saved.\n\n" + "\n".join(
-        f"- {item.title}: {item.reason} ({item.estimated_minutes} min)" for item in plan
-    )
 
 
 async def dashboard() -> str:
@@ -312,19 +291,6 @@ def build_ui() -> gr.Blocks:
         gr.Markdown("# Steady Current")
         quiz_state = gr.State()
         instructor_session = gr.State(InstructorSessionState().model_dump())
-
-        with gr.Tab("Study Setup"):
-            timeline = gr.Textbox(label="Study timeline", placeholder="Example: 8 weeks, 5 hours/week")
-            preferences = gr.Textbox(label="Preferences", lines=3)
-            strengths = gr.Textbox(label="Known strengths", lines=2)
-            weaknesses = gr.Textbox(label="Known weaknesses", lines=2)
-            setup_button = gr.Button("Save setup")
-            setup_output = gr.Markdown()
-            setup_button.click(
-                fn=save_setup,
-                inputs=[timeline, preferences, strengths, weaknesses],
-                outputs=setup_output,
-            )
 
         with gr.Tab("Progress Dashboard"):
             refresh_dashboard = gr.Button("Refresh")

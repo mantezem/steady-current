@@ -13,7 +13,6 @@ from app.models.schemas import (
     RelationshipType,
     Resource,
     RetrievedChunk,
-    StudySetup,
     Topic,
     TopicRelationship,
 )
@@ -92,26 +91,6 @@ class LearningRepository:
             )
             for row in rows
         ]
-
-    async def save_preferences(self, user_id: str, setup: StudySetup) -> None:
-        await self.pool.execute(
-            """
-            INSERT INTO user_preferences
-                (user_id, study_timeline, preferences, strengths, weaknesses, updated_at)
-            VALUES ($1, $2, $3, $4, $5, now())
-            ON CONFLICT (user_id) DO UPDATE SET
-                study_timeline = EXCLUDED.study_timeline,
-                preferences = EXCLUDED.preferences,
-                strengths = EXCLUDED.strengths,
-                weaknesses = EXCLUDED.weaknesses,
-                updated_at = now()
-            """,
-            user_id,
-            setup.study_timeline,
-            setup.preferences,
-            setup.strengths,
-            setup.weaknesses,
-        )
 
     async def list_mastery(self, user_id: str) -> list[MasteryRecord]:
         rows = await self.pool.fetch(

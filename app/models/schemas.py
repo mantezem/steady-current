@@ -62,13 +62,6 @@ class RetrievedChunk(DocumentChunk):
     similarity: float
 
 
-class StudySetup(BaseModel):
-    study_timeline: str
-    preferences: str = ""
-    strengths: str = ""
-    weaknesses: str = ""
-
-
 class StudyPlanItem(BaseModel):
     topic_id: str
     title: str

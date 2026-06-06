@@ -37,7 +37,7 @@ class RetrievalService:
         lines = []
         for index, chunk in enumerate(chunks, start=1):
             lines.append(
-                f"[{index}] {chunk.title} ({chunk.source_type}) - {chunk.source_url}\n"
+                f"[{index}] [{chunk.title} ({chunk.source_type})]({chunk.source_url})\n"
                 f"{chunk.content[:700]}"
             )
         return "\n\n".join(lines)
