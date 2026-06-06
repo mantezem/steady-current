@@ -84,7 +84,9 @@ class InstructorSessionState(BaseModel):
     selected_topic_id: str | None = None
     selected_topic_title: str | None = None
     selection_reason: str | None = None
+    mode: str = "discussion"
     ready_for_quiz: bool = False
+    active_question: "QuizQuestion | None" = None
 
 
 class QuizQuestion(BaseModel):

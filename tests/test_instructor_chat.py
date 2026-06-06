@@ -6,8 +6,10 @@ import pytest
 
 from app.agents.instructor import _build_instructor_prompt
 from app.models.schemas import (
+    EvaluationResult,
     InstructorSessionState,
     MasteryRecord,
+    QuizQuestion,
     RelationshipType,
     Topic,
     TopicRelationship,
@@ -133,7 +135,7 @@ async def test_instructor_chat_asks_for_time_before_selecting_topic(monkeypatch:
 
     monkeypatch.setattr(ui_app, "repo", fake_repo)
 
-    history, state, topic_status, quiz_topic, cleared = await ui_app.instructor_chat(
+    history, state, topic_status, cleared = await ui_app.instructor_chat(
         "What should I study?",
         [],
         None,
@@ -142,13 +144,12 @@ async def test_instructor_chat_asks_for_time_before_selecting_topic(monkeypatch:
     assert history[-1]["role"] == "assistant"
     assert "How much time do you have" in str(history[-1]["content"])
     assert topic_status == "No active instructor topic yet."
-    assert quiz_topic == ""
     assert cleared == ""
     assert InstructorSessionState(**state).selected_topic_id is None
 
 
 @pytest.mark.asyncio
-async def test_instructor_chat_selects_topic_and_autofills_quiz(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_instructor_chat_selects_topic(monkeypatch: pytest.MonkeyPatch) -> None:
     async def fake_repo() -> FakeRepo:
         return FakeRepo()
 
@@ -160,7 +161,7 @@ async def test_instructor_chat_selects_topic_and_autofills_quiz(monkeypatch: pyt
         lambda: SimpleNamespace(app_user_id="default-user"),
     )
 
-    history, state, topic_status, quiz_topic, cleared = await ui_app.instructor_chat(
+    history, state, topic_status, cleared = await ui_app.instructor_chat(
         "I have 30 minutes to study",
         [],
         None,
@@ -171,35 +172,168 @@ async def test_instructor_chat_selects_topic_and_autofills_quiz(monkeypatch: pyt
     assert session.selected_topic_id == "topic.a"
     assert session.selected_topic_title == "Topic A"
     assert session.selection_reason == "Reinforce low-confidence topic"
-    assert quiz_topic == "topic.a"
+    assert session.mode == "discussion"
+    assert session.active_question is None
     assert cleared == ""
     assert "Current topic: **Topic A**" in topic_status
     assert "I've selected **Topic A**" in str(history[-1]["content"])
 
 
 @pytest.mark.asyncio
-async def test_make_quiz_prefers_instructor_session_topic(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_instructor_chat_starts_inline_quiz(monkeypatch: pytest.MonkeyPatch) -> None:
     captured: dict[str, str] = {}
 
     class FakeQuizAgent:
         def __init__(self, repo: object) -> None:
             self.repo = repo
 
-        async def generate(self, topic_id: str):  # type: ignore[no-untyped-def]
+        async def generate(self, topic_id: str) -> QuizQuestion:
             captured["topic_id"] = topic_id
-            return SimpleNamespace(question="Q", choices=["A"], topic_id=topic_id)
+            return QuizQuestion(
+                topic_id=topic_id,
+                question="Q",
+                choices=["A", "B"],
+                correct_answer="A",
+                explanation="Because A.",
+            )
 
     async def fake_repo() -> FakeRepo:
         return FakeRepo()
 
     monkeypatch.setattr(ui_app, "repo", fake_repo)
     monkeypatch.setattr(ui_app, "QuizAgent", FakeQuizAgent)
+    monkeypatch.setattr(
+        ui_app,
+        "get_settings",
+        lambda: SimpleNamespace(app_user_id="default-user"),
+    )
 
-    question, choices_update, quiz_state = await ui_app.make_quiz(
-        "",
-        InstructorSessionState(selected_topic_id="topic.a").model_dump(),
+    history, state, topic_status, cleared = await ui_app.instructor_chat(
+        "quiz me",
+        [],
+        InstructorSessionState(
+            available_minutes=30,
+            selected_topic_id="topic.a",
+            selected_topic_title="Topic A",
+            selection_reason="Reinforce low-confidence topic",
+        ).model_dump(),
     )
 
     assert captured["topic_id"] == "topic.a"
-    assert question == "Q"
-    assert quiz_state.topic_id == "topic.a"
+    session = InstructorSessionState(**state)
+    assert session.mode == "quiz"
+    assert session.active_question is not None
+    assert session.active_question.topic_id == "topic.a"
+    assert "Quiz status: awaiting answer" in topic_status
+    assert "Reply in chat with the choice number, letter, or the full answer text." in str(history[-1]["content"])
+    assert cleared == ""
+
+
+@pytest.mark.asyncio
+async def test_instructor_chat_grades_chat_quiz_answer(monkeypatch: pytest.MonkeyPatch) -> None:
+    async def fake_repo() -> FakeRepo:
+        return FakeRepo()
+
+    class FakeEvaluationAgent:
+        def __init__(self, repo: object) -> None:
+            self.repo = repo
+
+        async def evaluate(self, user_id: str, question: QuizQuestion, selected_answer: str) -> EvaluationResult:
+            assert user_id == "default-user"
+            assert question.topic_id == "topic.a"
+            assert selected_answer == "A"
+            return EvaluationResult(
+                is_correct=True,
+                explanation="Because A.",
+                mastery=0.7,
+                confidence=0.3,
+            )
+
+    monkeypatch.setattr(ui_app, "repo", fake_repo)
+    monkeypatch.setattr(ui_app, "EvaluationAgent", FakeEvaluationAgent)
+    monkeypatch.setattr(
+        ui_app,
+        "get_settings",
+        lambda: SimpleNamespace(app_user_id="default-user"),
+    )
+
+    session = InstructorSessionState(
+        available_minutes=30,
+        selected_topic_id="topic.a",
+        selected_topic_title="Topic A",
+        selection_reason="Reinforce low-confidence topic",
+        mode="quiz",
+        active_question=QuizQuestion(
+            topic_id="topic.a",
+            question="Q",
+            choices=["A", "B"],
+            correct_answer="A",
+            explanation="Because A.",
+        ),
+    )
+
+    history, state, topic_status, cleared = await ui_app.instructor_chat(
+        "1",
+        [],
+        session.model_dump(),
+    )
+
+    updated_session = InstructorSessionState(**state)
+    assert updated_session.active_question is None
+    assert updated_session.mode == "quiz"
+    assert updated_session.ready_for_quiz is True
+    assert "ready for another question" in topic_status
+    assert history[-1]["role"] == "assistant"
+    assert "Correct" in str(history[-1]["content"])
+    assert "another question" in str(history[-1]["content"])
+    assert cleared == ""
+
+
+def test_resolve_quiz_answer_supports_number_letter_and_text() -> None:
+    question = QuizQuestion(
+        topic_id="topic.a",
+        question="Q",
+        choices=["First option", "Second option"],
+        correct_answer="First option",
+        explanation="Because.",
+    )
+
+    assert ui_app._resolve_quiz_answer("1", question) == "First option"
+    assert ui_app._resolve_quiz_answer("B", question) == "Second option"
+    assert ui_app._resolve_quiz_answer("Second option", question) == "Second option"
+    assert ui_app._resolve_quiz_answer("B. Second option", question) == "Second option"
+    assert ui_app._resolve_quiz_answer("unknown", question) is None
+
+
+@pytest.mark.asyncio
+async def test_instructor_chat_returns_to_discussion_after_quiz_feedback(monkeypatch: pytest.MonkeyPatch) -> None:
+    async def fake_repo() -> FakeRepo:
+        return FakeRepo()
+
+    monkeypatch.setattr(ui_app, "repo", fake_repo)
+    monkeypatch.setattr(ui_app, "InstructorAgent", FakeInstructorAgent)
+    monkeypatch.setattr(
+        ui_app,
+        "get_settings",
+        lambda: SimpleNamespace(app_user_id="default-user"),
+    )
+
+    history, state, topic_status, cleared = await ui_app.instructor_chat(
+        "Can you explain that again?",
+        [],
+        InstructorSessionState(
+            available_minutes=30,
+            selected_topic_id="topic.a",
+            selected_topic_title="Topic A",
+            selection_reason="Reinforce low-confidence topic",
+            mode="quiz",
+            ready_for_quiz=True,
+        ).model_dump(),
+    )
+
+    session = InstructorSessionState(**state)
+    assert session.mode == "discussion"
+    assert session.ready_for_quiz is False
+    assert "topic=topic.a" in str(history[-1]["content"])
+    assert "Mode: discussion" in topic_status
+    assert cleared == ""

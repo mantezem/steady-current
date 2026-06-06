@@ -137,6 +137,20 @@ def _learner_ready_for_quiz(message: str) -> bool:
     )
 
 
+def _learner_requests_another_question(message: str) -> bool:
+    text = message.lower()
+    return any(
+        phrase in text
+        for phrase in (
+            "another question",
+            "next question",
+            "one more question",
+            "more practice",
+            "ask another",
+        )
+    )
+
+
 def _topic_status_markdown(state: dict[str, Any] | InstructorSessionState | None) -> str:
     session = _session_state(state)
     if not session.selected_topic_id or not session.selected_topic_title:
@@ -148,8 +162,11 @@ def _topic_status_markdown(state: dict[str, Any] | InstructorSessionState | None
     )
     if session.available_minutes is not None:
         status += f"  \nSession time: {session.available_minutes} min"
-    if session.ready_for_quiz:
-        status += "  \nQuiz status: ready"
+    if session.active_question is not None:
+        status += "  \nQuiz status: awaiting answer"
+    elif session.ready_for_quiz:
+        status += "  \nQuiz status: ready for another question"
+    status += f"  \nMode: {session.mode}"
     return status
 
 
@@ -163,11 +180,75 @@ def _topic_intro(state: InstructorSessionState) -> str:
     return " ".join(parts)
 
 
+def _question_markdown(question: QuizQuestion) -> str:
+    choices = "\n".join(f"{index}. {choice}" for index, choice in enumerate(question.choices, start=1))
+    return (
+        f"Quiz question for **{question.topic_id}**:\n\n"
+        f"{question.question}\n\n"
+        f"{choices}\n\n"
+        "Reply in chat with the choice number, letter, or the full answer text."
+    )
+
+
+def _resolve_quiz_answer(message: str, question: QuizQuestion) -> str | None:
+    raw = message.strip()
+    if not raw:
+        return None
+
+    for choice in question.choices:
+        if raw.casefold() == choice.casefold():
+            return choice
+
+    numeric_match = re.fullmatch(r"(\d+)[\).]?", raw)
+    if numeric_match:
+        index = int(numeric_match.group(1)) - 1
+        if 0 <= index < len(question.choices):
+            return question.choices[index]
+
+    letter_match = re.fullmatch(r"([A-Za-z])[\).]?", raw)
+    if letter_match:
+        index = ord(letter_match.group(1).upper()) - ord("A")
+        if 0 <= index < len(question.choices):
+            return question.choices[index]
+
+    prefixed_match = re.fullmatch(r"([A-Za-z]|\d+)[\).:\-]\s*(.+)", raw)
+    if prefixed_match:
+        candidate = prefixed_match.group(2).strip()
+        for choice in question.choices:
+            if candidate.casefold() == choice.casefold():
+                return choice
+
+    return None
+
+
+async def _start_quiz_question(
+    history: list[dict[str, str]],
+    session: InstructorSessionState,
+    learning_repo: LearningRepository,
+) -> tuple[list[dict[str, str]], InstructorSessionState]:
+    if not session.selected_topic_id:
+        raise ValueError("No active topic is available for quiz generation.")
+    question = await QuizAgent(learning_repo).generate(session.selected_topic_id)
+    session.active_question = question
+    session.mode = "quiz"
+    session.ready_for_quiz = False
+    history.append({"role": "assistant", "content": _question_markdown(question)})
+    return history, session
+
+
+def _chat_outputs(
+    history: list[dict[str, str]],
+    session: InstructorSessionState,
+    clear_message: str = "",
+) -> tuple[list[dict[str, str]], dict[str, Any], str, str]:
+    return (history, session.model_dump(), _topic_status_markdown(session), clear_message)
+
+
 async def instructor_chat(
     message: str,
     history: list[dict[str, str]] | None,
     session_state: dict[str, Any] | InstructorSessionState | None,
-) -> tuple[list[dict[str, str]], dict[str, Any], str, str, str]:
+) -> tuple[list[dict[str, str]], dict[str, Any], str, str]:
     history = list(history or [])
     session = _session_state(session_state)
     parsed_minutes = _parse_available_minutes(message)
@@ -186,7 +267,9 @@ async def instructor_chat(
                 {"role": "assistant", "content": reply},
             ]
         )
-        return history, session.model_dump(), _topic_status_markdown(session), "", ""
+        return _chat_outputs(history, session, "")
+
+    history.append({"role": "user", "content": message})
 
     selected_new_topic = False
     if session.selected_topic_id is None or _learner_requested_switch(message):
@@ -197,18 +280,60 @@ async def instructor_chat(
         )
         if recommendation is None:
             reply = "I couldn't find an unlocked topic to recommend yet. Try taking a quiz first so I can calibrate your current level."
-            history.extend(
-                [
-                    {"role": "user", "content": message},
-                    {"role": "assistant", "content": reply},
-                ]
-            )
-            return history, session.model_dump(), _topic_status_markdown(session), "", ""
+            history.append({"role": "assistant", "content": reply})
+            return _chat_outputs(history, session, "")
         session.selected_topic_id = recommendation.topic_id
         session.selected_topic_title = recommendation.title
         session.selection_reason = recommendation.reason
+        session.mode = "discussion"
         session.ready_for_quiz = False
+        session.active_question = None
         selected_new_topic = True
+
+    if session.mode == "quiz" and session.active_question is not None:
+        resolved_answer = _resolve_quiz_answer(message, session.active_question)
+        if resolved_answer is None:
+            choices = ", ".join(
+                f"{index}. {choice}" for index, choice in enumerate(session.active_question.choices, start=1)
+            )
+            history.append(
+                {
+                    "role": "assistant",
+                    "content": (
+                        "I couldn't match that to one of the answer choices. "
+                        f"Reply with the choice number, letter, or exact text: {choices}."
+                    ),
+                }
+            )
+            return _chat_outputs(history, session, "")
+        settings = get_settings()
+        result = await EvaluationAgent(learning_repo).evaluate(
+            settings.app_user_id,
+            session.active_question,
+            resolved_answer,
+        )
+        verdict = "Correct" if result.is_correct else "Incorrect"
+        history.append(
+            {
+                "role": "assistant",
+                "content": (
+                    f"{verdict}\n\n{result.explanation}\n\n"
+                    f"Updated mastery: {result.mastery:.0%}. Confidence: {result.confidence:.0%}.\n\n"
+                    "Ask for another question to keep practicing, or ask a follow-up question to return to discussion."
+                ),
+            }
+        )
+        session.active_question = None
+        session.ready_for_quiz = True
+        return _chat_outputs(history, session, "")
+
+    if _learner_ready_for_quiz(message) or (session.mode == "quiz" and _learner_requests_another_question(message)):
+        history, session = await _start_quiz_question(history, session, learning_repo)
+        return _chat_outputs(history, session, "")
+
+    if session.mode == "quiz" and session.active_question is None:
+        session.mode = "discussion"
+        session.ready_for_quiz = False
 
     agent = InstructorAgent(learning_repo)
     prompt_message = (
@@ -227,57 +352,9 @@ async def instructor_chat(
     )
     if selected_new_topic:
         answer = f"{_topic_intro(session)}\n\n{answer}"
-    if _learner_ready_for_quiz(message):
-        session.ready_for_quiz = True
-        answer += (
-            f"\n\nYou're ready to move into quiz mode for **{session.selected_topic_title}**. "
-            "The Quiz tab has been pre-filled with this topic."
-        )
-
-    history.extend(
-        [
-            {"role": "user", "content": message},
-            {"role": "assistant", "content": answer},
-        ]
-    )
-    return (
-        history,
-        session.model_dump(),
-        _topic_status_markdown(session),
-        session.selected_topic_id or "",
-        "",
-    )
-
-
-async def make_quiz(
-    topic_id: str,
-    session_state: dict[str, Any] | InstructorSessionState | None,
-) -> tuple[str, gr.update, QuizQuestion]:
-    session = _session_state(session_state)
-    resolved_topic_id = session.selected_topic_id or topic_id
-    if not resolved_topic_id:
-        settings = get_settings()
-        learning_repo = await repo()
-        recommendation = await StudyPlanner(learning_repo).recommend_topic(settings.app_user_id, 20)
-        if recommendation is None:
-            raise ValueError("No topic is available for quiz generation yet.")
-        resolved_topic_id = recommendation.topic_id
-    learning_repo = await repo()
-    question = await QuizAgent(learning_repo).generate(resolved_topic_id)
-    return question.question, gr.update(choices=question.choices, value=None), question
-
-
-async def submit_answer(question: QuizQuestion, answer: str) -> str:
-    if question is None or not answer:
-        return "Choose an answer first."
-    settings = get_settings()
-    learning_repo = await repo()
-    result = await EvaluationAgent(learning_repo).evaluate(settings.app_user_id, question, answer)
-    verdict = "Correct" if result.is_correct else "Incorrect"
-    return (
-        f"{verdict}\n\n{result.explanation}\n\n"
-        f"Updated mastery: {result.mastery:.0%}. Confidence: {result.confidence:.0%}."
-    )
+        answer += "\n\nAsk follow-up questions when you want more detail, or say `quiz me` when you're ready for practice."
+    history.append({"role": "assistant", "content": answer})
+    return _chat_outputs(history, session, "")
 
 
 async def topic_tree() -> str:
@@ -289,31 +366,12 @@ async def topic_tree() -> str:
 def build_ui() -> gr.Blocks:
     with gr.Blocks(title="Steady Current") as demo:
         gr.Markdown("# Steady Current")
-        quiz_state = gr.State()
         instructor_session = gr.State(InstructorSessionState().model_dump())
 
         with gr.Tab("Progress Dashboard"):
             refresh_dashboard = gr.Button("Refresh")
             dashboard_output = gr.Markdown()
             refresh_dashboard.click(fn=dashboard, outputs=dashboard_output)
-
-        with gr.Tab("Quiz"):
-            quiz_topic = gr.Textbox(label="Topic ID", value="")
-            generate_button = gr.Button("Generate question")
-            question_text = gr.Markdown()
-            choices = gr.Radio(label="Answer", choices=[])
-            submit_button = gr.Button("Submit answer")
-            quiz_result = gr.Markdown()
-            generate_button.click(
-                fn=make_quiz,
-                inputs=[quiz_topic, instructor_session],
-                outputs=[question_text, choices, quiz_state],
-            )
-            submit_button.click(
-                fn=submit_answer,
-                inputs=[quiz_state, choices],
-                outputs=quiz_result,
-            )
 
         with gr.Tab("Instructor Chat"):
             instructor_topic_status = gr.Markdown("No active instructor topic yet.")
@@ -330,7 +388,6 @@ def build_ui() -> gr.Blocks:
                     instructor_chatbot,
                     instructor_session,
                     instructor_topic_status,
-                    quiz_topic,
                     instructor_message,
                 ],
             )
@@ -341,7 +398,6 @@ def build_ui() -> gr.Blocks:
                     instructor_chatbot,
                     instructor_session,
                     instructor_topic_status,
-                    quiz_topic,
                     instructor_message,
                 ],
             )
