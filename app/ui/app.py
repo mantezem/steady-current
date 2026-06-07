@@ -363,15 +363,22 @@ async def topic_tree() -> str:
     return await learning_repo.topic_tree_markdown(settings.app_user_id)
 
 
+async def progress_overview() -> tuple[str, str]:
+    return await dashboard(), await topic_tree()
+
+
 def build_ui() -> gr.Blocks:
     with gr.Blocks(title="Steady Current") as demo:
         gr.Markdown("# Steady Current")
         instructor_session = gr.State(InstructorSessionState().model_dump())
 
-        with gr.Tab("Progress Dashboard"):
-            refresh_dashboard = gr.Button("Refresh")
-            dashboard_output = gr.Markdown()
-            refresh_dashboard.click(fn=dashboard, outputs=dashboard_output)
+        with gr.Tab("Progress Overview"):
+            refresh_overview = gr.Button("Refresh")
+            with gr.Row():
+                dashboard_output = gr.Markdown()
+                tree_output = gr.Markdown()
+            refresh_overview.click(fn=progress_overview, outputs=[dashboard_output, tree_output])
+            demo.load(fn=progress_overview, outputs=[dashboard_output, tree_output])
 
         with gr.Tab("Instructor Chat"):
             instructor_topic_status = gr.Markdown("No active instructor topic yet.")
@@ -401,10 +408,5 @@ def build_ui() -> gr.Blocks:
                     instructor_message,
                 ],
             )
-
-        with gr.Tab("Topic Tree"):
-            refresh_tree = gr.Button("Refresh")
-            tree_output = gr.Markdown()
-            refresh_tree.click(fn=topic_tree, outputs=tree_output)
 
     return demo
