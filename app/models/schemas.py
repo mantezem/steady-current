@@ -20,6 +20,7 @@ class Topic(BaseModel):
     description: str = ""
     depth: int = 0
     sort_order: int = 0
+    difficulty: str = "intermediate"
 
 
 class TopicRelationship(BaseModel):

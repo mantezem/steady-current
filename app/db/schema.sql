@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS topics (
     domain TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
     depth INTEGER NOT NULL DEFAULT 0,
-    sort_order INTEGER NOT NULL DEFAULT 0
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    difficulty TEXT NOT NULL DEFAULT 'intermediate'
 );
 
 CREATE TABLE IF NOT EXISTS topic_relationships (

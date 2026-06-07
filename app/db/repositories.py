@@ -38,14 +38,15 @@ class LearningRepository:
         async with self.pool.acquire() as conn:
             await conn.execute(
                 """
-                INSERT INTO topics (id, title, domain, description, depth, sort_order)
-                VALUES ($1, $2, $3, $4, $5, $6)
+                INSERT INTO topics (id, title, domain, description, depth, sort_order, difficulty)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 ON CONFLICT (id) DO UPDATE SET
                     title = EXCLUDED.title,
                     domain = EXCLUDED.domain,
                     description = EXCLUDED.description,
                     depth = EXCLUDED.depth,
-                    sort_order = EXCLUDED.sort_order
+                    sort_order = EXCLUDED.sort_order,
+                    difficulty = EXCLUDED.difficulty
                 """,
                 topic.id,
                 topic.title,
@@ -53,6 +54,7 @@ class LearningRepository:
                 topic.description,
                 topic.depth,
                 topic.sort_order,
+                topic.difficulty,
             )
 
     async def upsert_relationship(self, relationship: TopicRelationship) -> None:
@@ -72,6 +74,12 @@ class LearningRepository:
     async def list_topics(self) -> list[Topic]:
         rows = await self.pool.fetch("SELECT * FROM topics ORDER BY domain, depth, sort_order, id")
         return [Topic(**dict(row)) for row in rows]
+
+    async def get_topic(self, topic_id: str) -> Topic | None:
+        row = await self.pool.fetchrow("SELECT * FROM topics WHERE id = $1", topic_id)
+        if row is None:
+            return None
+        return Topic(**dict(row))
 
     async def list_relationships(
         self, relationship_type: RelationshipType | None = None

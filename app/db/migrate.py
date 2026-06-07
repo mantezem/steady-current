@@ -42,6 +42,29 @@ async def _ensure_embedding_dimensions(conn: asyncpg.Connection, dimensions: int
     )
 
 
+async def _ensure_topic_difficulty_column(conn: asyncpg.Connection) -> None:
+    exists = await conn.fetchval(
+        """
+        SELECT EXISTS (
+            SELECT 1
+            FROM information_schema.columns
+            WHERE table_schema = 'public'
+              AND table_name = 'topics'
+              AND column_name = 'difficulty'
+        )
+        """
+    )
+    if exists:
+        return
+
+    await conn.execute(
+        """
+        ALTER TABLE topics
+        ADD COLUMN difficulty TEXT NOT NULL DEFAULT 'intermediate'
+        """
+    )
+
+
 async def migrate(pool: asyncpg.Pool) -> None:
     settings = get_settings()
     schema = Path(__file__).with_name("schema.sql").read_text().replace(
@@ -49,4 +72,5 @@ async def migrate(pool: asyncpg.Pool) -> None:
     )
     async with pool.acquire() as conn:
         await conn.execute(schema)
+        await _ensure_topic_difficulty_column(conn)
         await _ensure_embedding_dimensions(conn, settings.openai_embedding_dimensions)
